@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'dart:async';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: MyApp(),
+    theme: ThemeData.dark(useMaterial3: true),
   ));
 }
 
@@ -39,34 +39,52 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData.dark(useMaterial3: true),
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
-              title: Text('Pendientes'),
+              title: const Text('Listado de pendientes'),
+              backgroundColor: const Color.fromARGB(255, 64, 62, 82),
             ),
             body: Center(
                 child: Column(children: <Widget>[
               Center(
-                child: ElevatedButton(
+                  child: Column(
+                children: [
+                  const Text(""),
+                  ElevatedButton(
                     onPressed: () {
                       // _createModal(context);
                       registroModal(context, "Datos de nuevo pendiente", -1,
                           true, '', '', '');
                     },
-                    child: const Text("Crear pendiente")),
-              ),
+                    child: SizedBox(
+                        width: 135,
+                        child: Row(
+                          children: [
+                            Icon(MdiIcons.plus),
+                            const Text("Nuevo pendiente"),
+                          ],
+                        )),
+                  ),
+                  const Text(""),
+                ],
+              )),
               Expanded(
                   child: StreamBuilder(
                       stream: _streamController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          List<Record>? regs = snapshot.data;
+                          List<Record>? recs = snapshot.data;
                           return ListView.builder(
-                            itemCount: regs?.length,
+                            itemCount: recs?.length,
                             itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text('Dato: ${regs?[index].title}'),
-                                subtitle:
-                                    Text('Número: ${regs?[index].description}'),
+                              return Card(
+                                  child: ListTile(
+                                leading: Icon(MdiIcons.check),
+                                title: Text('${recs?[index].title}'),
+                                subtitle: Text(
+                                    '${recs?[index].description} - ${recs?[index].state}'),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -81,13 +99,13 @@ class _MyAppState extends State<MyApp> {
                                               records[index].description,
                                               records[index].state);
                                         },
-                                        icon: const Icon(Icons.edit)),
+                                        icon: Icon(MdiIcons.pencil)),
                                     IconButton(
                                         onPressed: () {
                                           records.removeAt(index);
                                           _streamController.add(records);
                                         },
-                                        icon: const Icon(Icons.delete)),
+                                        icon: Icon(MdiIcons.trashCan)),
                                   ],
                                 ),
                                 onTap: () {
@@ -100,12 +118,12 @@ class _MyAppState extends State<MyApp> {
                                       records[index].description,
                                       records[index].state);
                                 },
-                              );
+                              ));
                             },
                           );
                         } else {
                           // return CircularProgressIndicator();
-                          return Text("Sin datos");
+                          return const Text("Sin datos");
                         }
                       }))
             ]))));
@@ -122,47 +140,49 @@ class _MyAppState extends State<MyApp> {
           title: Center(
             child: Text(sub),
           ),
-          content: Column(children: [
-            const Text(""),
-            TextFormField(
-              enabled: allowedit,
-              style: const TextStyle(
-                color: Colors
-                    .black, // Establece el color del texto cuando está deshabilitado
+          content: SingleChildScrollView(
+            child: Column(children: [
+              const Text(""),
+              TextFormField(
+                enabled: allowedit,
+                style: const TextStyle(
+                  color: Colors
+                      .white, // Establece el color del texto cuando está deshabilitado
+                ),
+                initialValue: title,
+                decoration: const InputDecoration(labelText: 'Titulo'),
+                onChanged: (value) {
+                  title = value;
+                },
               ),
-              initialValue: title,
-              decoration: const InputDecoration(labelText: 'Titulo'),
-              onChanged: (value) {
-                title = value;
-              },
-            ),
-            TextFormField(
-              enabled: allowedit,
-              style: const TextStyle(
-                color: Colors
-                    .black, // Establece el color del texto cuando está deshabilitado
+              TextFormField(
+                enabled: allowedit,
+                style: const TextStyle(
+                  color: Colors
+                      .white, // Establece el color del texto cuando está deshabilitado
+                ),
+                initialValue: description,
+                decoration: const InputDecoration(labelText: 'Descripción'),
+                keyboardType: TextInputType.text,
+                onChanged: (value) {
+                  description = value;
+                },
               ),
-              initialValue: description,
-              decoration: const InputDecoration(labelText: 'Descripción'),
-              keyboardType: TextInputType.text,
-              onChanged: (value) {
-                description = value;
-              },
-            ),
-            TextFormField(
-              enabled: allowedit,
-              style: const TextStyle(
-                color: Colors
-                    .black, // Establece el color del texto cuando está deshabilitado
+              TextFormField(
+                enabled: allowedit,
+                style: const TextStyle(
+                  color: Colors
+                      .white, // Establece el color del texto cuando está deshabilitado
+                ),
+                initialValue: state,
+                decoration: const InputDecoration(labelText: 'Estado'),
+                keyboardType: TextInputType.text,
+                onChanged: (value) {
+                  state = value;
+                },
               ),
-              initialValue: state,
-              decoration: const InputDecoration(labelText: 'Estado'),
-              keyboardType: TextInputType.text,
-              onChanged: (value) {
-                state = value;
-              },
-            ),
-          ]),
+            ]),
+          ),
           actions: <Widget>[
             Visibility(
               visible: allowedit,

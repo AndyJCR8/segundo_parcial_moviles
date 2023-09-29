@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       // _createModal(context);
                       registroModal(context, "Datos de nuevo pendiente", -1,
-                          true, '', '', '');
+                          true, '', '', 'pendiente');
                     },
                     child: SizedBox(
                         width: 135,
@@ -81,10 +81,22 @@ class _MyAppState extends State<MyApp> {
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
-                                leading: Icon(MdiIcons.check),
-                                title: Text('${recs?[index].title}'),
+                                leading: IconButton(
+                                    icon: recs![index].state == 'pendiente'
+                                        ? Icon(MdiIcons.close)
+                                        : Icon(MdiIcons.check),
+                                    onPressed: () {
+                                      if (recs[index].state == 'pendiente') {
+                                        recs[index].state = 'completado';
+                                        _streamController.add(recs);
+                                      } else {
+                                        recs[index].state = 'pendiente';
+                                        _streamController.add(recs);
+                                      }
+                                    }),
+                                title: Text(recs[index].title),
                                 subtitle: Text(
-                                    '${recs?[index].description} - ${recs?[index].state}'),
+                                    '${recs[index].description} - ${recs[index].state}'),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -169,17 +181,13 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               TextFormField(
-                enabled: allowedit,
+                enabled: false,
                 style: const TextStyle(
                   color: Colors
                       .white, // Establece el color del texto cuando está deshabilitado
                 ),
                 initialValue: state,
                 decoration: const InputDecoration(labelText: 'Estado'),
-                keyboardType: TextInputType.text,
-                onChanged: (value) {
-                  state = value;
-                },
               ),
             ]),
           ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "985218586756",
+    "project_id": "movilesparcial2",
+    "storage_bucket": "movilesparcial2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985218586756:android:34a8f2e459748ae35f8ad1",
+        "android_client_info": {
+          "package_name": "com.example.moviles_parcial2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFguca07fXG8jk6tuaJsENruEQfH90cbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
